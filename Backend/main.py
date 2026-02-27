@@ -45,6 +45,17 @@ def health():
     return {"ok": True}
 
 
+@app.get("/")
+def root():
+    return {
+        "service": "AI CFO Runway Optimizer",
+        "version": "0.1.0",
+        "status": "running",
+        "frontend": "http://localhost:3000",
+        "docs": "http://localhost:8000/docs",
+    }
+
+
 @app.post("/upload")
 async def upload(file: UploadFile = File(...)):
     global GLOBAL_DF

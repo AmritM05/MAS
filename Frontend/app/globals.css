@@ -1,53 +1,128 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root{
-	--bg-1: #0f172a; /* slate-900 */
-	--bg-2: #071033; /* deep navy */
-	--accent: #7c3aed; /* violet */
-	--accent-2: #06b6d4; /* cyan */
-	--glass: rgba(255,255,255,0.06);
+	--bg-1: #0a0e1a;
+	--bg-2: #050816;
+	--accent: #7c3aed;
+	--accent-2: #06b6d4;
+	--glass: rgba(255,255,255,0.04);
+	--glow-violet: rgba(124,58,237,0.35);
+	--glow-cyan: rgba(6,182,212,0.30);
 }
 
-html,body,#root{
+html,body{
 	height:100%;
+	margin:0;
 }
 
 body{
-	background: radial-gradient(1200px 600px at 10% 10%, rgba(124,58,237,0.12), transparent),
-							radial-gradient(1000px 500px at 90% 90%, rgba(6,182,212,0.08), transparent),
-							linear-gradient(180deg,var(--bg-1),var(--bg-2)) !important;
-	color: #E6EEF8 !important;
-	-webkit-font-smoothing:antialiased;
-	-moz-osx-font-smoothing:grayscale;
-	text-rendering: optimizeLegibility;
+	background:
+		radial-gradient(ellipse 900px 500px at 15% 10%, var(--glow-violet), transparent),
+		radial-gradient(ellipse 800px 400px at 85% 85%, var(--glow-cyan), transparent),
+		linear-gradient(180deg, var(--bg-1), var(--bg-2)) !important;
+	color: #e2e8f0 !important;
+	font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+	-webkit-font-smoothing: antialiased;
 }
 
-/* reset alignment override - we will center as needed */
-/* no global text-align rules here */
-
-/* Futuristic glass card */
+/* ── Glass card ─────────────────────────────────────────── */
 .futuristic-card{
-	background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-	border: 1px solid rgba(124,58,237,0.12);
-	box-shadow: 0 10px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-	border-radius: 14px;
-	backdrop-filter: blur(6px) saturate(120%);
+	background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+	border: 1px solid rgba(124,58,237,0.15);
+	box-shadow:
+		0 8px 32px rgba(0,0,0,0.4),
+		inset 0 1px 0 rgba(255,255,255,0.06);
+	border-radius: 16px;
+	backdrop-filter: blur(12px) saturate(140%);
+	transition: box-shadow 0.3s, border-color 0.3s, transform 0.3s;
+}
+.futuristic-card:hover{
+	border-color: rgba(6,182,212,0.3);
+	box-shadow:
+		0 8px 32px rgba(0,0,0,0.4),
+		0 0 40px rgba(6,182,212,0.06),
+		inset 0 1px 0 rgba(255,255,255,0.08);
+	transform: translateY(-2px);
 }
 
+/* ── Neon button ────────────────────────────────────────── */
 .neon-btn{
-	background-image: linear-gradient(90deg,var(--accent),var(--accent-2));
-	box-shadow: 0 6px 20px rgba(124,58,237,0.18), 0 0 30px rgba(6,182,212,0.06);
+	background: linear-gradient(135deg, var(--accent), var(--accent-2));
+	box-shadow: 0 4px 20px rgba(124,58,237,0.25), 0 0 40px rgba(6,182,212,0.08);
+	border: none;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	transition: transform 0.2s, box-shadow 0.2s;
+	cursor: pointer;
+}
+.neon-btn:hover{
+	transform: translateY(-1px);
+	box-shadow: 0 6px 28px rgba(124,58,237,0.35), 0 0 60px rgba(6,182,212,0.12);
+}
+.neon-btn:disabled{
+	opacity: 0.5;
+	cursor: not-allowed;
+	transform: none;
 }
 
-.accent-text{
-	color: var(--accent);
+/* ── Text helpers ───────────────────────────────────────── */
+.accent-text{ color: var(--accent-2); }
+
+.neon-text{
+	background: linear-gradient(135deg, #c084fc, #67e8f9);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
 }
 
-.muted-glow{ text-shadow: 0 4px 30px rgba(12,18,40,0.6); }
+.muted-glow{ text-shadow: 0 0 60px rgba(124,58,237,0.3), 0 0 120px rgba(6,182,212,0.15); }
 
-/* small responsive tweaks */
+/* ── Stat value big number ──────────────────────────────── */
+.stat-value{
+	font-variant-numeric: tabular-nums;
+	font-weight: 800;
+	letter-spacing: -0.02em;
+}
+
+/* ── 3D chart perspective wrapper ───────────────────────── */
+.chart-3d{
+	perspective: 900px;
+}
+.chart-3d > *{
+	transform: rotateX(8deg) rotateY(-4deg);
+	transition: transform 0.4s;
+}
+.chart-3d:hover > *{
+	transform: rotateX(2deg) rotateY(-1deg);
+}
+
+/* ── Upload drop zone ───────────────────────────────────── */
+.drop-zone{
+	border: 2px dashed rgba(124,58,237,0.3);
+	border-radius: 12px;
+	transition: border-color 0.3s, background 0.3s;
+	cursor: pointer;
+}
+.drop-zone:hover, .drop-zone.drag-over{
+	border-color: var(--accent-2);
+	background: rgba(6,182,212,0.04);
+}
+
+/* ── Pulse animation ────────────────────────────────────── */
+@keyframes pulse-glow{
+	0%, 100%{ box-shadow: 0 0 20px rgba(6,182,212,0.15); }
+	50%{ box-shadow: 0 0 40px rgba(6,182,212,0.30); }
+}
+.pulse-card{ animation: pulse-glow 3s ease-in-out infinite; }
+
+/* ── Scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar{ width:6px; }
+::-webkit-scrollbar-track{ background: transparent; }
+::-webkit-scrollbar-thumb{ background: rgba(124,58,237,0.3); border-radius:3px; }
+
+/* ── Responsive ─────────────────────────────────────────── */
 @media (max-width:640px){
-	.futuristic-card{ border-radius:10px; padding:12px }
+	.futuristic-card{ border-radius:12px; }
+	.chart-3d > *{ transform: none; }
+	.chart-3d:hover > *{ transform: none; }
 }

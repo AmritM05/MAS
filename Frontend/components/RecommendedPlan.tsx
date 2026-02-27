@@ -1,58 +1,74 @@
 "use client";
 
-import React from "react";
-
-function stripHtml(input: string) {
-  if (!input) return "";
-  return input.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
-}
-
-function convertPlanToEnglish(plan: any): string[] {
-  if (!plan) return ["No plan available."];
-
-  if (typeof plan === "string") {
-    return [stripHtml(plan)];
-  }
-
-  if (Array.isArray(plan)) {
-    return plan.map((p, i) => {
-      if (typeof p === "string") return stripHtml(p);
-      if (typeof p === "object") {
-        const keys = Object.keys(p);
-        if (keys.length === 1) return `${keys[0]}: ${stripHtml(String(p[keys[0]]))}`;
-        return keys.map(k => `${k}: ${stripHtml(String(p[k]))}`).join(" — ");
-      }
-      return String(p);
-    });
-  }
-
-  if (typeof plan === "object") {
-    // If it has steps or actions, prefer that
-    if (plan.steps && Array.isArray(plan.steps)) {
-      return plan.steps.map((s: any, i: number) => {
-        if (typeof s === "string") return `${i + 1}. ${stripHtml(s)}`;
-        if (s.title || s.description) return `${i + 1}. ${stripHtml(String(s.title || ""))} ${stripHtml(String(s.description || ""))}`.trim();
-        return `${i + 1}. ${stripHtml(JSON.stringify(s))}`;
-      });
-    }
-
-    return Object.entries(plan).map(([k, v]) => `${k}: ${stripHtml(String(v))}`);
-  }
-
-  return [String(plan)];
-}
-
 export default function RecommendedPlan({ plan }: { plan: any }) {
-  const lines = convertPlanToEnglish(plan);
+  if (!plan) return null;
+
+  const actions: any[] = plan.plan || [];
+  const currentRunway = plan.current_runway;
+  const newRunway = plan.new_runway;
+  const burnBefore = plan.monthly_burn_before;
+  const burnAfter = plan.monthly_burn_after;
+  const note = plan.note;
 
   return (
-    <div className="futuristic-card p-4 mt-4">
-      <h3 className="text-lg font-semibold mb-2 accent-text">Recommended Plan</h3>
-      <div className="space-y-2">
-        {lines.map((line, idx) => (
-          <p key={idx} className="text-sm text-slate-100">{line}</p>
-        ))}
+    <div className="futuristic-card p-6">
+      <h2 className="text-lg font-semibold text-slate-200 mb-4 flex items-center gap-2">
+        <span className="text-xl">💡</span> Optimization Plan
+      </h2>
+
+      {/* Summary stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+        <div className="bg-white/5 rounded-lg p-3 text-center">
+          <p className="text-xs text-slate-500 uppercase">Current</p>
+          <p className="stat-value text-lg text-slate-300">
+            {currentRunway ?? "∞"}<span className="text-xs font-normal"> mo</span>
+          </p>
+        </div>
+        <div className="bg-white/5 rounded-lg p-3 text-center">
+          <p className="text-xs text-slate-500 uppercase">New</p>
+          <p className="stat-value text-lg text-cyan-400">
+            {newRunway ?? "∞"}<span className="text-xs font-normal"> mo</span>
+          </p>
+        </div>
+        <div className="bg-white/5 rounded-lg p-3 text-center">
+          <p className="text-xs text-slate-500 uppercase">Burn Before</p>
+          <p className="stat-value text-lg text-rose-400">
+            ${burnBefore?.toLocaleString()}
+          </p>
+        </div>
+        <div className="bg-white/5 rounded-lg p-3 text-center">
+          <p className="text-xs text-slate-500 uppercase">Burn After</p>
+          <p className="stat-value text-lg text-emerald-400">
+            ${burnAfter?.toLocaleString()}
+          </p>
+        </div>
       </div>
+
+      {/* Action items */}
+      {actions.length > 0 && (
+        <div className="space-y-2">
+          {actions.map((a, i) => (
+            <div
+              key={i}
+              className="flex items-center justify-between bg-white/[0.03] rounded-lg px-4 py-3 border border-white/5"
+            >
+              <div className="flex items-center gap-3">
+                <span className="w-6 h-6 rounded-full bg-violet-500/20 text-violet-400 text-xs flex items-center justify-center font-bold">
+                  {i + 1}
+                </span>
+                <span className="text-sm text-slate-200">{a.action}</span>
+              </div>
+              <span className="text-sm font-mono text-emerald-400">
+                -${a.monthly_savings_est?.toLocaleString()}/mo
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {note && (
+        <p className="mt-4 text-xs text-slate-500 italic">{note}</p>
+      )}
     </div>
   );
 }

@@ -1,20 +1,23 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:8000"
+  baseURL: "http://localhost:8000",
 });
 
-export const uploadCSV = (file: File) => {
+export const uploadCSV = async (file: File) => {
   const formData = new FormData();
   formData.append("file", file);
-
-  return API.post("/upload", formData);
+  const res = await API.post("/upload", formData);
+  return res.data;
 };
 
-export const getOptimization = (months: number) => {
-  return API.post("/optimize", { months });
+export const getMetrics = async (cashBalance?: number) => {
+  const params = cashBalance ? { cash_balance: cashBalance } : {};
+  const res = await API.get("/metrics", { params });
+  return res.data;
 };
 
-export const getMetrics = () => {
-  return API.get("/metrics").then((r) => r.data);
+export const getOptimization = async (months: number) => {
+  const res = await API.post("/optimize", { months });
+  return res.data;
 };
