@@ -7,6 +7,7 @@ from typing import Optional
 import pandas as pd
 from fastapi import FastAPI, File, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse, HTMLResponse
 from pydantic import BaseModel, Field
 
 from financial_engine import compute_metrics
@@ -47,13 +48,7 @@ def health():
 
 @app.get("/")
 def root():
-    return {
-        "service": "AI CFO Runway Optimizer",
-        "version": "0.1.0",
-        "status": "running",
-        "frontend": "http://localhost:3000",
-        "docs": "http://localhost:8000/docs",
-    }
+    return RedirectResponse(url="http://localhost:3000")
 
 
 @app.post("/upload")
