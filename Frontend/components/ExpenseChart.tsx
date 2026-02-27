@@ -11,6 +11,10 @@ import {
 } from "recharts";
 
 export default function ExpenseChart({ data }: any) {
+  if (!Array.isArray(data) || data.length === 0) {
+    return <p className="text-sm text-slate-300">No expense data</p>;
+  }
+
   return (
     <div className="p-6 futuristic-card">
 
@@ -23,7 +27,7 @@ export default function ExpenseChart({ data }: any) {
             <XAxis dataKey="category" stroke="rgba(255,255,255,0.6)" />
             <YAxis stroke="rgba(255,255,255,0.6)" />
             <Tooltip />
-            <Bar dataKey="amount" fill="#06b6d4" />
+            <Bar dataKey="amount" fill="#00ffff" />
           </BarChart>
         </ResponsiveContainer>
       </div>

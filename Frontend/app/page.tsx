@@ -12,7 +12,7 @@ export default function Home() {
   const [plan, setPlan] = useState<any>(null);
 
   return (
-    <main className="p-10 min-h-screen">
+    <main className="p-10 min-h-screen text-center flex flex-col items-center justify-center">
 
       <header className="mb-6">
         <h1 className="text-4xl font-extrabold mb-2 neon-text muted-glow">AI CFO Runway Optimizer</h1>

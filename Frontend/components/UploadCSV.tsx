@@ -13,8 +13,10 @@ export default function UploadCSV({ onData }: any) {
     }
 
     try {
-      const data = await uploadCSV(file);
-      onData(data);
+      await uploadCSV(file);
+      // after upload we need the server to compute metrics
+      const metrics = await getMetrics();
+      onData(metrics);
     } catch (error) {
       console.error(error);
       alert("Upload failed");

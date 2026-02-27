@@ -14,3 +14,7 @@ export const uploadCSV = (file: File) => {
 export const getOptimization = (months: number) => {
   return API.post("/optimize", { months });
 };
+
+export const getMetrics = () => {
+  return API.get("/metrics").then((r) => r.data);
+};

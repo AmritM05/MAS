@@ -24,10 +24,8 @@ body{
 	text-rendering: optimizeLegibility;
 }
 
-/* Make sure default alignment is left for app content */
-body, main {
-	text-align: left !important;
-}
+/* reset alignment override - we will center as needed */
+/* no global text-align rules here */
 
 /* Futuristic glass card */
 .futuristic-card{
