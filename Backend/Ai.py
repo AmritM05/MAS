@@ -1,2 +1,0 @@
-import json
-def generate_insights
