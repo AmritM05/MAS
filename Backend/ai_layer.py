@@ -147,7 +147,7 @@ Metrics:
 
 Guidelines:
 - Start each bullet with "- "
-- Mention the burn rate, runway, and top expense categories by name and amount.
+- Mention the burn rate ("burn"), runway, and top expense categories by name and amount.
 - If runway is null, state that the company is cash-flow positive.
 - End with a single-sentence takeaway.
 
@@ -198,7 +198,7 @@ action.
 
 ## Current Financial Position
 - Cash on hand, monthly burn rate, current runway.
-- Top expense categories with amounts and percentages.
+- Top expense categories with amounts.
 
 ## Optimization Plan
 - Summarise every action from the plan array with its estimated monthly
