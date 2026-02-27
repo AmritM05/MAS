@@ -64,6 +64,8 @@ export default function RunwayForecast({ cash, burn }: { cash: number; burn: num
                 color: "#e2e8f0",
                 fontSize: 12,
               }}
+              labelStyle={{ color: "#06b6d4" }}
+              itemStyle={{ color: "#06b6d4" }}
               formatter={(value: number | undefined) => {
                 const v = value ?? 0;
                 return [`$${v.toLocaleString()}`, "Cash"];
