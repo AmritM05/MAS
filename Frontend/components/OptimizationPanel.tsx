@@ -18,31 +18,29 @@ export default function OptimizationPanel({ setPlan }: any) {
   };
 
   return (
-    <div className="p-6 border rounded shadow mt-6">
+    <div className="futuristic-card p-6 mt-6">
 
-      <h2 className="text-xl font-bold mb-3">
+      <h2 className="text-xl font-bold mb-3 accent-text">
         Extend Runway
       </h2>
 
-      <label className="mr-2">
-        Target Months:
-      </label>
+      <div className="flex items-center">
+        <label className="mr-3 text-sm text-slate-300">Target Months</label>
 
-      <input
-        type="number"
-        value={months}
-        onChange={(e) =>
-          setMonths(Number(e.target.value))
-        }
-        className="border p-1 w-20"
-      />
+        <input
+          type="number"
+          value={months}
+          onChange={(e) => setMonths(Number(e.target.value))}
+          className="border bg-transparent px-2 py-1 w-24 text-white rounded"
+        />
 
-      <button
-        onClick={runOptimization}
-        className="bg-green-500 text-white px-4 py-2 ml-4 rounded"
-      >
-        Optimize
-      </button>
+        <button
+          onClick={runOptimization}
+          className="neon-btn text-white px-4 py-2 ml-4 rounded"
+        >
+          Optimize
+        </button>
+      </div>
 
     </div>
   );

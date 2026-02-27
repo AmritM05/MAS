@@ -4,6 +4,7 @@ import { useState } from "react";
 import UploadCSV from "../components/UploadCSV";
 import Dashboard from "../components/Dashboard";
 import OptimizationPanel from "../components/OptimizationPanel";
+import RecommendedPlan from "../components/RecommendedPlan";
 
 export default function Home() {
 
@@ -11,33 +12,27 @@ export default function Home() {
   const [plan, setPlan] = useState<any>(null);
 
   return (
-    <main className="p-10">
+    <main className="p-10 min-h-screen">
 
-      <h1 className="text-3xl font-bold mb-6">
-        AI CFO Runway Optimizer
-      </h1>
+      <header className="mb-6">
+        <h1 className="text-4xl font-extrabold mb-2 neon-text muted-glow">AI CFO Runway Optimizer</h1>
+        <p className="text-sm text-slate-300">Actionable runway guidance with a futuristic UI</p>
+      </header>
 
-      <UploadCSV onData={setData} />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-      {data && <Dashboard data={data} />}
+        <section className="lg:col-span-1">
+          <UploadCSV onData={setData} />
+          {data && <OptimizationPanel setPlan={setPlan} />}
+        </section>
 
-      {data && (
-        <OptimizationPanel setPlan={setPlan} />
-      )}
+        <section className="lg:col-span-2">
+          {data && <Dashboard data={data} />}
 
-      {plan && (
-        <div className="mt-6 p-4 border rounded shadow">
+          {plan && <RecommendedPlan plan={plan} />}
+        </section>
 
-          <h2 className="font-bold mb-2">
-            Recommended Plan
-          </h2>
-
-          <pre className="bg-gray-100 p-3 rounded">
-            {JSON.stringify(plan, null, 2)}
-          </pre>
-
-        </div>
-      )}
+      </div>
 
     </main>
   );

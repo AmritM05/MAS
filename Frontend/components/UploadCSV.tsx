@@ -22,26 +22,19 @@ export default function UploadCSV({ onData }: any) {
   };
 
   return (
-    <div className="p-4 border rounded shadow mt-4">
+    <div className="futuristic-card p-4 mt-4">
 
-      <h2 className="text-lg font-bold mb-2">
-        Upload Financial CSV
-      </h2>
+      <h2 className="text-lg font-semibold text-slate-200 mb-2">Upload Financial CSV</h2>
 
-      <input
-        type="file"
-        accept=".csv"
-        onChange={(e) =>
-          setFile(e.target.files ? e.target.files[0] : null)
-        }
-      />
+      <div className="flex items-center">
+        <input
+          type="file"
+          accept=".csv"
+          onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
+        />
 
-      <button
-        onClick={handleUpload}
-        className="bg-blue-500 text-white px-4 py-2 rounded ml-3"
-      >
-        Upload
-      </button>
+        <button onClick={handleUpload} className="neon-btn text-white px-4 py-2 rounded ml-3">Upload</button>
+      </div>
 
     </div>
   );

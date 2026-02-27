@@ -25,27 +25,16 @@ export default function RunwayForecast({ cash, burn }: any) {
   }
 
   return (
-    <div className="p-6 border rounded shadow">
+    <div className="p-6 futuristic-card">
 
-      <h2 className="text-xl font-bold mb-4">
-        Cash Runway Forecast
-      </h2>
+      <h2 className="text-lg font-semibold text-slate-200 mb-4">Cash Runway Forecast</h2>
 
-      <LineChart
-        width={500}
-        height={300}
-        data={data}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="month" />
-        <YAxis />
+      <LineChart width={500} height={300} data={data}>
+        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+        <XAxis dataKey="month" stroke="rgba(255,255,255,0.4)" />
+        <YAxis stroke="rgba(255,255,255,0.4)" />
         <Tooltip />
-        <Line
-          type="monotone"
-          dataKey="cash"
-          stroke="#ef4444"
-          strokeWidth={3}
-        />
+        <Line type="monotone" dataKey="cash" stroke="#7c3aed" strokeWidth={3} />
       </LineChart>
 
     </div>
