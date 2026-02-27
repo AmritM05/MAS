@@ -6,7 +6,8 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  CartesianGrid
+  CartesianGrid,
+  ResponsiveContainer,
 } from "recharts";
 
 export default function RunwayForecast({ cash, burn }: any) {
@@ -29,13 +30,17 @@ export default function RunwayForecast({ cash, burn }: any) {
 
       <h2 className="text-lg font-semibold text-slate-200 mb-4">Cash Runway Forecast</h2>
 
-      <LineChart width={500} height={300} data={data}>
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-        <XAxis dataKey="month" stroke="rgba(255,255,255,0.4)" />
-        <YAxis stroke="rgba(255,255,255,0.4)" />
-        <Tooltip />
-        <Line type="monotone" dataKey="cash" stroke="#7c3aed" strokeWidth={3} />
-      </LineChart>
+      <div style={{ width: "100%", height: 320 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+            <XAxis dataKey="month" stroke="rgba(255,255,255,0.6)" />
+            <YAxis stroke="rgba(255,255,255,0.6)" />
+            <Tooltip />
+            <Line type="monotone" dataKey="cash" stroke="#7c3aed" strokeWidth={3} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
 
     </div>
   );

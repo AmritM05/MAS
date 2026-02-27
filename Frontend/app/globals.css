@@ -17,10 +17,16 @@ html,body,#root{
 body{
 	background: radial-gradient(1200px 600px at 10% 10%, rgba(124,58,237,0.12), transparent),
 							radial-gradient(1000px 500px at 90% 90%, rgba(6,182,212,0.08), transparent),
-							linear-gradient(180deg,var(--bg-1),var(--bg-2));
-	color: #E6EEF8;
+							linear-gradient(180deg,var(--bg-1),var(--bg-2)) !important;
+	color: #E6EEF8 !important;
 	-webkit-font-smoothing:antialiased;
 	-moz-osx-font-smoothing:grayscale;
+	text-rendering: optimizeLegibility;
+}
+
+/* Make sure default alignment is left for app content */
+body, main {
+	text-align: left !important;
 }
 
 /* Futuristic glass card */
