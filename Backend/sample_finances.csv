@@ -1,0 +1,43 @@
+date,amount,category,notes
+2025-07-01,-32000,Payroll,July salaries
+2025-07-05,-4500,SaaS,Dev tooling
+2025-07-10,-6200,Cloud,AWS bill
+2025-07-15,-3100,Marketing,Google Ads
+2025-07-20,-5500,Rent,Office lease
+2025-07-25,-1200,Other,Office supplies
+2025-07-28,12000,Revenue,Client A payment
+2025-08-01,-33000,Payroll,August salaries
+2025-08-05,-4700,SaaS,Dev tooling + new seats
+2025-08-10,-6500,Cloud,AWS bill
+2025-08-15,-3400,Marketing,Meta Ads
+2025-08-20,-5500,Rent,Office lease
+2025-08-22,-800,Other,Team lunch
+2025-08-28,11500,Revenue,Client A payment
+2025-09-01,-34000,Payroll,September salaries
+2025-09-05,-4900,SaaS,Annual renewal bump
+2025-09-10,-7000,Cloud,AWS + new service
+2025-09-15,-3600,Marketing,LinkedIn campaign
+2025-09-20,-5500,Rent,Office lease
+2025-09-25,-900,Other,Misc
+2025-09-28,13000,Revenue,Client A + B payment
+2025-10-01,-34500,Payroll,October salaries
+2025-10-05,-4800,SaaS,Dev tooling
+2025-10-10,-7200,Cloud,AWS bill
+2025-10-15,-4000,Marketing,Ads expansion
+2025-10-20,-5500,Rent,Office lease
+2025-10-25,-1100,Other,Supplies
+2025-10-28,12500,Revenue,Client A payment
+2025-11-01,-35000,Payroll,November salaries
+2025-11-05,-5000,SaaS,New analytics tool
+2025-11-10,-7500,Cloud,AWS + monitoring
+2025-11-15,-4200,Marketing,Campaign push
+2025-11-20,-5500,Rent,Office lease
+2025-11-25,-950,Other,Misc
+2025-11-28,14000,Revenue,Client A + C payment
+2025-12-01,-35500,Payroll,December salaries
+2025-12-05,-5100,SaaS,Year-end licenses
+2025-12-10,-7800,Cloud,AWS bill
+2025-12-15,-4500,Marketing,Holiday campaign
+2025-12-20,-5500,Rent,Office lease
+2025-12-25,-1300,Other,Holiday gifts
+2025-12-28,13500,Revenue,Client A payment
