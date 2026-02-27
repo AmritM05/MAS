@@ -222,3 +222,47 @@ Rules:
 Report:"""
 
     return _call_granite(prompt, max_tokens=1500)
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#  ask_cfo_question
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+def ask_cfo_question(question: str, metrics: dict[str, Any]) -> str:
+    """
+    Answer a user's financial question as if you were their CFO.
+
+    Parameters
+    ----------
+    question : str
+        The user's question (e.g. "Can we hire two engineers next month?")
+    metrics : dict
+        Structured JSON from ``financial_engine.compute_metrics``.
+
+    Returns
+    -------
+    str  – A concise, professional CFO-style answer.
+    """
+    prompt = f"""You are an experienced Chief Financial Officer advising a startup.
+The user has asked you a question. Use ONLY the financial data provided below
+to answer. Be concise, specific, and reference exact numbers. If the question
+involves hypothetical changes (hiring, spending, etc.), calculate the impact
+on burn rate and runway.
+
+=== CURRENT FINANCIAL DATA ===
+{json.dumps(metrics, indent=2)}
+
+=== USER QUESTION ===
+{question}
+
+Guidelines:
+- Be direct and professional
+- Reference exact numbers from the data
+- If it's a scenario question, show before/after numbers
+- Include a clear recommendation
+- Keep the response under 200 words
+- Use bullet points where helpful
+
+Answer:"""
+
+    return _call_granite(prompt, max_tokens=800)

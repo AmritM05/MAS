@@ -8,14 +8,17 @@ const NAV_ITEMS = [
   { href: "/runway", label: "Runway", icon: "🛫" },
   { href: "/expenses", label: "Expenses", icon: "💸" },
   { href: "/forecast", label: "Forecast", icon: "📈" },
+  { href: "/scenarios", label: "Scenarios", icon: "🔮" },
   { href: "/optimize", label: "Optimize", icon: "🚀" },
+  { href: "/ask", label: "Ask CFO", icon: "🤖" },
+  { href: "/reports", label: "Reports", icon: "📋" },
 ];
 
 export default function NavBar() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex items-center gap-1 p-1 rounded-xl bg-white/[0.03] border border-white/5 backdrop-blur-md">
+    <nav className="flex items-center gap-1 p-1 rounded-xl bg-white/[0.03] border border-white/5 backdrop-blur-md overflow-x-auto scrollbar-thin max-w-full">
       {NAV_ITEMS.map((item) => {
         const active = pathname === item.href;
         return (
