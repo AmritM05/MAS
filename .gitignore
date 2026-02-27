@@ -1,1 +1,9 @@
 instructions.md
+
+# Environment secrets
+.env
+Backend/.env
+
+# Python
+__pycache__/
+*.pyc
