@@ -59,17 +59,12 @@ def compute_metrics(df: pd.DataFrame, cash_balance: float) -> dict[str, Any]:
             {
                 "category": str(cat),
                 "amount": round(float(amt), 2),
-                "pct": round(float(amt) / total_expense * 100, 2) if total_expense else 0.0,
             }
         )
 
-    top_cost_drivers = expense_list[:3]
-
     return {
-        "cash_balance": cash_balance,
-        "monthly_burn": round(monthly_burn, 2),
-        "runway_months": runway_months,
+        "runway": runway_months,
+        "cash": cash_balance,
+        "burn": round(monthly_burn, 2),
         "expenses": expense_list,
-        "top_cost_drivers": top_cost_drivers,
-        "months_observed": months_observed,
     }

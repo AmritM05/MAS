@@ -12,6 +12,7 @@ from pydantic import BaseModel, Field
 from financial_engine import compute_metrics
 from optimizer import optimize
 from utils import parse_and_validate_csv
+from ai_layer import generate_insights, generate_board_report
 
 # ── App + CORS ────────────────────────────────────────────────────────
 app = FastAPI(title="AI CFO Runway Optimizer", version="0.1.0")
@@ -78,3 +79,38 @@ def run_optimize(body: OptimizeRequest):
 
     bal = body.cash_balance if body.cash_balance is not None else DEFAULT_CASH_BALANCE
     return optimize(GLOBAL_DF, bal, body.months)
+
+
+@app.get("/insights")
+def insights(cash_balance: Optional[float] = Query(None)):
+    """Return a short CFO-style bullet summary of the current metrics."""
+    if GLOBAL_DF is None:
+        raise HTTPException(status_code=400, detail="POST /upload first")
+
+    bal = cash_balance if cash_balance is not None else DEFAULT_CASH_BALANCE
+    metrics_data = compute_metrics(GLOBAL_DF, bal)
+
+    try:
+        text = generate_insights(metrics_data)
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"AI service error: {exc}")
+
+    return {"insights": text}
+
+
+@app.post("/report")
+def report(body: OptimizeRequest):
+    """Generate a full executive board memo with optimization plan."""
+    if GLOBAL_DF is None:
+        raise HTTPException(status_code=400, detail="POST /upload first")
+
+    bal = body.cash_balance if body.cash_balance is not None else DEFAULT_CASH_BALANCE
+    metrics_data = compute_metrics(GLOBAL_DF, bal)
+    optimization_data = optimize(GLOBAL_DF, bal, body.months)
+
+    try:
+        text = generate_board_report(metrics_data, optimization_data)
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"AI service error: {exc}")
+
+    return {"report": text}
