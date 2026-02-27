@@ -58,7 +58,10 @@ export default function ExpenseChart({ data }: { data: any[] }) {
                 color: "#e2e8f0",
                 fontSize: 12,
               }}
-              formatter={(value: number) => [`$${value.toLocaleString()}`, "Amount"]}
+              formatter={(value: number | undefined) => {
+                const v = value ?? 0;
+                return [`$${v.toLocaleString()}`, "Amount"];
+              }}
             />
             <Bar dataKey="amount" radius={[6, 6, 0, 0]}>
               {data.map((_, i) => (

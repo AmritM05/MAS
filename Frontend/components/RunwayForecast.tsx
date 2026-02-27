@@ -64,7 +64,10 @@ export default function RunwayForecast({ cash, burn }: { cash: number; burn: num
                 color: "#e2e8f0",
                 fontSize: 12,
               }}
-              formatter={(value: number) => [`$${value.toLocaleString()}`, "Cash"]}
+              formatter={(value: number | undefined) => {
+                const v = value ?? 0;
+                return [`$${v.toLocaleString()}`, "Cash"];
+              }}
             />
             {zeroMonth <= 12 && (
               <ReferenceLine
