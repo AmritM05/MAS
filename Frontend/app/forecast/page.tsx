@@ -121,9 +121,9 @@ export default function ForecastPage() {
                 formatter={(value: any) => [`$${Number(value).toLocaleString()}`, "Cash"]}
                 labelFormatter={(l: any) => `Month ${String(l).replace("M", "")}`}
               />
-              <ReferenceLine y={0} stroke="rgba(239,68,68,0.5)" strokeDasharray="4 4" label={{ value: "Cash Out", fill: "#ef4444", fontSize: 11 }} />
+              <ReferenceLine y={0} stroke="rgba(239,68,68,0.4)" strokeDasharray="6 4" />
               {runway <= months && (
-                <ReferenceLine x={`M${Math.round(runway)}`} stroke="rgba(239,68,68,0.6)" strokeDasharray="4 4" label={{ value: `Runway End (M${runway.toFixed(1)})`, fill: "#ef4444", fontSize: 11, position: "top" }} />
+                <ReferenceLine x={`M${Math.round(runway)}`} stroke="rgba(239,68,68,0.6)" strokeDasharray="4 4" label={{ value: `Runway End`, fill: "#ef4444", fontSize: 10, position: "insideTopLeft" }} />
               )}
               <Area type="monotone" dataKey="cash" stroke="#7c3aed" fill="url(#cashGrad)" strokeWidth={2} dot={false} />
             </AreaChart>

@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI CFO Runway Optimizer",
+  title: "CFO.ai",
   description: "Actionable runway guidance powered by AI",
 };
 
@@ -34,7 +34,7 @@ export default function RootLayout({
             {/* Header */}
             <header className="text-center mb-6">
               <h1 className="text-4xl sm:text-5xl font-extrabold neon-text muted-glow tracking-tight">
-                AI CFO Runway Optimizer
+                CFO.ai
               </h1>
               <p className="mt-2 text-slate-500 text-sm max-w-md mx-auto">
                 Upload financials &middot; Analyze burn &middot; Extend runway

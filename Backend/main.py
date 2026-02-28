@@ -17,7 +17,7 @@ from ai_layer import generate_insights, generate_board_report, ask_cfo_question
 from anomaly_detector import detect_anomalies
 
 # ── App + CORS ────────────────────────────────────────────────────────
-app = FastAPI(title="AI CFO Runway Optimizer", version="0.1.0")
+app = FastAPI(title="CFO.ai", version="0.1.0")
 
 app.add_middleware(
     CORSMiddleware,
