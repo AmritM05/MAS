@@ -111,7 +111,7 @@ export default function ExpensesPage() {
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{ background: "rgba(15,23,42,0.95)", border: "1px solid rgba(124,58,237,0.3)", borderRadius: 10, color: "#e2e8f0", fontSize: 12 }}
+                  contentStyle={{ background: "rgba(218, 220, 226, 0.95)", border: "1px solid rgba(124,58,237,0.3)", borderRadius: 10, color: "#e2e8f0", fontSize: 12 }}
                   formatter={(value: any) => [`$${Number(value).toLocaleString()}`, "Amount"]}
                 />
               </PieChart>
