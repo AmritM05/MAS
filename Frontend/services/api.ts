@@ -17,8 +17,8 @@ export const getMetrics = async (cashBalance?: number) => {
   return res.data;
 };
 
-export const getOptimization = async (months: number) => {
-  const res = await API.post("/optimize", { months });
+export const getOptimization = async (months: number, cashBalance?: number) => {
+  const res = await API.post("/optimize", { months, cash_balance: cashBalance });
   return res.data;
 };
 
@@ -28,8 +28,8 @@ export const getInsights = async (cashBalance?: number) => {
   return res.data;
 };
 
-export const getReport = async (months: number) => {
-  const res = await API.post("/report", { months });
+export const getReport = async (months: number, cashBalance?: number) => {
+  const res = await API.post("/report", { months, cash_balance: cashBalance });
   return res.data;
 };
 
@@ -40,6 +40,7 @@ export const runScenario = async (scenario: {
   revenue_growth_pct?: number;
   additional_monthly_cost?: number;
   additional_monthly_revenue?: number;
+  cash_balance?: number;
 }) => {
   const res = await API.post("/scenario", scenario);
   return res.data;
@@ -50,7 +51,7 @@ export const getAnomalies = async () => {
   return res.data;
 };
 
-export const askCFO = async (question: string) => {
-  const res = await API.post("/ask", { question });
+export const askCFO = async (question: string, cashBalance?: number) => {
+  const res = await API.post("/ask", { question, cash_balance: cashBalance });
   return res.data;
 };

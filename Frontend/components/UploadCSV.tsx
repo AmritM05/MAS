@@ -2,6 +2,7 @@
 
 import { useState, useRef, DragEvent } from "react";
 import { uploadCSV, getMetrics } from "../services/api";
+import { useData } from "../context/DataContext";
 
 interface Props {
   onData: (d: any) => void;
@@ -13,6 +14,7 @@ export default function UploadCSV({ onData, compact = false }: Props) {
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { cashBalance } = useData();
 
   const handleFile = (f: File) => {
     setFile(f);
@@ -26,7 +28,7 @@ export default function UploadCSV({ onData, compact = false }: Props) {
     setUploading(true);
     try {
       await uploadCSV(uploadFile);
-      const metrics = await getMetrics();
+      const metrics = await getMetrics(cashBalance);
       onData(metrics);
     } catch (err: any) {
       const msg =

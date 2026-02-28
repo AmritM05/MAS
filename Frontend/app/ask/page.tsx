@@ -21,7 +21,7 @@ const SUGGESTED_QUESTIONS = [
 ];
 
 export default function AskCFOPage() {
-  const { metrics } = useData();
+  const { metrics, cashBalance } = useData();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -50,7 +50,7 @@ export default function AskCFOPage() {
     setLoading(true);
 
     try {
-      const res = await askCFO(q);
+      const res = await askCFO(q, cashBalance);
       setMessages((prev) => [...prev, { role: "cfo", text: res.answer, timestamp: new Date() }]);
     } catch (err: any) {
       const errMsg = err?.response?.data?.detail || "AI CFO is unavailable. Please try again.";

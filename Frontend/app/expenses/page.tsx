@@ -81,7 +81,7 @@ export default function ExpensesPage() {
                   contentStyle={{ background: "rgba(218, 220, 226, 0.95)", border: "1px solid rgba(124,58,237,0.3)", borderRadius: 10, color: "#000000", fontSize: 12 }}
                   formatter={(value: number | undefined) => [`$${Number(value ?? 0).toLocaleString()}`, "Amount"]}
                 />
-                <Bar dataKey="amount" radius={[6, 6, 0, 0]}>
+                <Bar dataKey="amount" radius={[6, 6, 0, 0]} activeBar={false}>
                   {enriched.map((_, i) => (
                     <Cell key={i} fill={`url(#ebar-${i % COLORS.length})`} />
                   ))}
@@ -112,7 +112,7 @@ export default function ExpensesPage() {
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{ background: "rgba(218, 220, 226, 0.95)", border: "1px solid rgba(124,58,237,0.3)", borderRadius: 10, color: "#e2e8f0", fontSize: 12 }}
+                  contentStyle={{ background: "rgba(218, 220, 226, 0.95)", border: "1px solid rgba(124,58,237,0.3)", borderRadius: 10, color: "#000000", fontSize: 12 }}
                   formatter={(value: number | undefined) => [`$${Number(value ?? 0).toLocaleString()}`, "Amount"]}
                 />
               </PieChart>

@@ -117,7 +117,7 @@ export default function ForecastPage() {
               <XAxis dataKey="label" stroke="rgba(255,255,255,0.4)" tick={{ fontSize: 11, fill: "rgba(255,255,255,0.5)" }} />
               <YAxis stroke="rgba(255,255,255,0.4)" tick={{ fontSize: 11, fill: "rgba(255,255,255,0.5)" }} tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`} />
               <Tooltip
-                contentStyle={{ background: "rgba(15,23,42,0.95)", border: "1px solid rgba(124,58,237,0.3)", borderRadius: 10, color: "#e2e8f0", fontSize: 12 }}
+                contentStyle={{ background: "rgba(218, 220, 226, 0.95)", border: "1px solid rgba(124,58,237,0.3)", borderRadius: 10, color: "#000000", fontSize: 12 }}
                 formatter={(value: any) => [`$${Number(value).toLocaleString()}`, "Cash"]}
                 labelFormatter={(l: any) => `Month ${String(l).replace("M", "")}`}
               />
@@ -149,7 +149,7 @@ export default function ForecastPage() {
               <XAxis dataKey="label" stroke="rgba(255,255,255,0.4)" tick={{ fontSize: 11, fill: "rgba(255,255,255,0.5)" }} />
               <YAxis stroke="rgba(255,255,255,0.4)" tick={{ fontSize: 11, fill: "rgba(255,255,255,0.5)" }} tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`} />
               <Tooltip
-                contentStyle={{ background: "rgba(15,23,42,0.95)", border: "1px solid rgba(124,58,237,0.3)", borderRadius: 10, color: "#e2e8f0", fontSize: 12 }}
+                contentStyle={{ background: "rgba(218, 220, 226, 0.95)", border: "1px solid rgba(124,58,237,0.3)", borderRadius: 10, color: "#000000", fontSize: 12 }}
                 formatter={(value: any) => [`$${Number(value).toLocaleString()}`]}
                 labelFormatter={(l: any) => `Month ${String(l).replace("M", "")}`}
               />

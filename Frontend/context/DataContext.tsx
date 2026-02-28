@@ -8,6 +8,8 @@ interface DataContextType {
   plan: any;
   setPlan: (p: any) => void;
   uploaded: boolean;
+  cashBalance: number;
+  setCashBalance: (n: number) => void;
 }
 
 const DataContext = createContext<DataContextType>({
@@ -16,11 +18,14 @@ const DataContext = createContext<DataContextType>({
   plan: null,
   setPlan: () => {},
   uploaded: false,
+  cashBalance: 400000,
+  setCashBalance: () => {},
 });
 
 export function DataProvider({ children }: { children: ReactNode }) {
   const [metrics, setMetrics] = useState<any>(null);
   const [plan, setPlan] = useState<any>(null);
+  const [cashBalance, setCashBalance] = useState<number>(400000);
 
   return (
     <DataContext.Provider
@@ -30,6 +35,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
         plan,
         setPlan,
         uploaded: !!metrics,
+        cashBalance,
+        setCashBalance,
       }}
     >
       {children}

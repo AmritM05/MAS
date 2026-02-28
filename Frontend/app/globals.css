@@ -16,13 +16,25 @@ html,body{
 }
 
 body{
-	background:
-		radial-gradient(ellipse 900px 500px at 15% 10%, var(--glow-violet), transparent),
-		radial-gradient(ellipse 800px 400px at 85% 85%, var(--glow-cyan), transparent),
-		linear-gradient(180deg, var(--bg-1), var(--bg-2)) !important;
+	background: var(--bg-1) !important;
 	color: #e2e8f0 !important;
 	font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
 	-webkit-font-smoothing: antialiased;
+}
+
+body::before{
+	content: '';
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+	pointer-events: none;
+	background:
+		radial-gradient(ellipse 900px 500px at 15% 10%, var(--glow-violet), transparent),
+		radial-gradient(ellipse 800px 400px at 85% 85%, var(--glow-cyan), transparent),
+		linear-gradient(180deg, var(--bg-1), var(--bg-2));
 }
 
 /* ── Glass card ─────────────────────────────────────────── */
@@ -43,6 +55,9 @@ body{
 		0 0 40px rgba(6,182,212,0.06),
 		inset 0 1px 0 rgba(255,255,255,0.08);
 	transform: translateY(-2px);
+}
+.futuristic-card:has(.chart-3d):hover{
+	transform: none;
 }
 
 /* ── Neon button ────────────────────────────────────────── */
@@ -84,16 +99,15 @@ body{
 	letter-spacing: -0.02em;
 }
 
-/* ── 3D chart perspective wrapper ───────────────────────── */
+/* ── Chart wrapper (flat, no 3D) ─────────────────────────── */
 .chart-3d{
-	perspective: 900px;
+	/* no perspective or transforms */
 }
 .chart-3d > *{
-	transform: rotateX(8deg) rotateY(-4deg);
-	transition: transform 0.4s;
+	transform: none !important;
 }
 .chart-3d:hover > *{
-	transform: rotateX(2deg) rotateY(-1deg);
+	transform: none !important;
 }
 
 /* ── Upload drop zone ───────────────────────────────────── */
@@ -123,6 +137,4 @@ body{
 /* ── Responsive ─────────────────────────────────────────── */
 @media (max-width:640px){
 	.futuristic-card{ border-radius:12px; }
-	.chart-3d > *{ transform: none; }
-	.chart-3d:hover > *{ transform: none; }
 }

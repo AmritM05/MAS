@@ -16,8 +16,8 @@ import {
 } from "recharts";
 
 export default function OptimizePage() {
-  const { metrics, plan, setPlan } = useData();
-  const [months, setMonths] = useState(3);
+  const { metrics, plan, setPlan, cashBalance } = useData();
+  const [months, setMonths] = useState<string>("3");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,7 +37,7 @@ export default function OptimizePage() {
     setLoading(true);
     setError(null);
     try {
-      const result = await getOptimization(months);
+      const result = await getOptimization(Number(months) || 1, cashBalance);
       setPlan(result);
     } catch (err: any) {
       setError(err?.response?.data?.detail || "Optimization failed. Try uploading data again.");
@@ -92,13 +92,13 @@ export default function OptimizePage() {
               min={1}
               max={36}
               value={months}
-              onChange={(e) => setMonths(Number(e.target.value))}
+              onChange={(e) => setMonths(e.target.value)}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-white text-sm focus:border-cyan-500 focus:outline-none transition-colors"
             />
           </div>
           <button
             onClick={runOptimization}
-            disabled={loading || months <= 0}
+            disabled={loading || (Number(months) || 0) <= 0}
             className="neon-btn text-white px-6 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap"
           >
             {loading ? "⚙️ Optimizing..." : "Generate Plan"}
@@ -164,7 +164,8 @@ export default function OptimizePage() {
                     <XAxis type="number" stroke="rgba(255,255,255,0.4)" tick={{ fontSize: 11, fill: "rgba(255,255,255,0.5)" }} tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`} />
                     <YAxis type="category" dataKey="name" stroke="rgba(255,255,255,0.4)" tick={{ fontSize: 11, fill: "rgba(255,255,255,0.5)" }} width={160} />
                     <Tooltip
-                      contentStyle={{ background: "rgba(15,23,42,0.95)", border: "1px solid rgba(52,211,153,0.3)", borderRadius: 10, color: "#e2e8f0", fontSize: 12 }}
+                      cursor={false}
+                      contentStyle={{ background: "rgba(218, 220, 226, 0.95)", border: "1px solid rgba(124,58,237,0.3)", borderRadius: 10, color: "#000000", fontSize: 12 }}
                       formatter={(value: any) => [`$${Number(value).toLocaleString()}/mo`, "Savings"]}
                     />
                     <Bar dataKey="savings" fill="url(#savingsGrad)" radius={[0, 6, 6, 0]} barSize={24} />

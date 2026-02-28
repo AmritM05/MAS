@@ -6,13 +6,13 @@ import Link from "next/link";
 import { getReport, getInsights } from "../../services/api";
 
 export default function ReportPage() {
-  const { metrics } = useData();
+  const { metrics, cashBalance } = useData();
   const [report, setReport] = useState<string | null>(null);
   const [insights, setInsights] = useState<string | null>(null);
   const [loadingReport, setLoadingReport] = useState(false);
   const [loadingInsights, setLoadingInsights] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [months, setMonths] = useState(3);
+  const [months, setMonths] = useState<string>("3");
 
   if (!metrics) {
     return (
@@ -28,7 +28,7 @@ export default function ReportPage() {
     setLoadingReport(true);
     setError(null);
     try {
-      const res = await getReport(months);
+      const res = await getReport(Number(months) || 1, cashBalance);
       setReport(res.report);
     } catch (err: any) {
       setError(err?.response?.data?.detail || "Failed to generate report.");
@@ -41,7 +41,7 @@ export default function ReportPage() {
     setLoadingInsights(true);
     setError(null);
     try {
-      const res = await getInsights();
+      const res = await getInsights(cashBalance);
       setInsights(res.insights);
     } catch (err: any) {
       setError(err?.response?.data?.detail || "Failed to generate insights.");
@@ -96,7 +96,7 @@ export default function ReportPage() {
           <div className="flex gap-2 items-end">
             <div className="flex-1">
               <label className="text-xs uppercase tracking-widest text-slate-500 block mb-1">Optimization months</label>
-              <input type="number" min={1} max={24} value={months} onChange={(e) => setMonths(Number(e.target.value))}
+              <input type="number" min={1} max={24} value={months} onChange={(e) => setMonths(e.target.value)}
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none" />
             </div>
             <button onClick={generateReport} disabled={loadingReport}

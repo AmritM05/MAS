@@ -32,17 +32,17 @@ interface ScenarioResult {
 }
 
 export default function ScenarioPage() {
-  const { metrics } = useData();
+  const { metrics, cashBalance } = useData();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ScenarioResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const [newHires, setNewHires] = useState(0);
-  const [avgSalary, setAvgSalary] = useState(15000);
-  const [marketingPct, setMarketingPct] = useState(0);
-  const [revGrowthPct, setRevGrowthPct] = useState(0);
-  const [extraCost, setExtraCost] = useState(0);
-  const [extraRevenue, setExtraRevenue] = useState(0);
+  const [newHires, setNewHires] = useState<string>("0");
+  const [avgSalary, setAvgSalary] = useState<string>("15000");
+  const [marketingPct, setMarketingPct] = useState<string>("0");
+  const [revGrowthPct, setRevGrowthPct] = useState<string>("0");
+  const [extraCost, setExtraCost] = useState<string>("0");
+  const [extraRevenue, setExtraRevenue] = useState<string>("0");
 
   if (!metrics) {
     return (
@@ -59,12 +59,13 @@ export default function ScenarioPage() {
     setError(null);
     try {
       const res = await runScenario({
-        new_hires: newHires,
-        avg_salary: avgSalary,
-        marketing_change_pct: marketingPct,
-        revenue_growth_pct: revGrowthPct,
-        additional_monthly_cost: extraCost,
-        additional_monthly_revenue: extraRevenue,
+        new_hires: Number(newHires) || 0,
+        avg_salary: Number(avgSalary) || 0,
+        marketing_change_pct: Number(marketingPct) || 0,
+        revenue_growth_pct: Number(revGrowthPct) || 0,
+        additional_monthly_cost: Number(extraCost) || 0,
+        additional_monthly_revenue: Number(extraRevenue) || 0,
+        cash_balance: cashBalance,
       });
       setResult(res);
     } catch (err: any) {
@@ -105,32 +106,32 @@ export default function ScenarioPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <div>
             <label className="text-xs uppercase tracking-widest text-slate-500 block mb-1">New hires</label>
-            <input type="number" min={0} value={newHires} onChange={(e) => setNewHires(Number(e.target.value))}
+            <input type="number" min={0} value={newHires} onChange={(e) => setNewHires(e.target.value)}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none" />
           </div>
           <div>
             <label className="text-xs uppercase tracking-widest text-slate-500 block mb-1">Avg salary / month</label>
-            <input type="number" min={0} value={avgSalary} onChange={(e) => setAvgSalary(Number(e.target.value))}
+            <input type="number" min={0} value={avgSalary} onChange={(e) => setAvgSalary(e.target.value)}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none" />
           </div>
           <div>
             <label className="text-xs uppercase tracking-widest text-slate-500 block mb-1">Marketing change %</label>
-            <input type="number" value={marketingPct} onChange={(e) => setMarketingPct(Number(e.target.value))}
+            <input type="number" value={marketingPct} onChange={(e) => setMarketingPct(e.target.value)}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none" />
           </div>
           <div>
             <label className="text-xs uppercase tracking-widest text-slate-500 block mb-1">Revenue growth %</label>
-            <input type="number" value={revGrowthPct} onChange={(e) => setRevGrowthPct(Number(e.target.value))}
+            <input type="number" value={revGrowthPct} onChange={(e) => setRevGrowthPct(e.target.value)}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none" />
           </div>
           <div>
             <label className="text-xs uppercase tracking-widest text-slate-500 block mb-1">Extra monthly cost</label>
-            <input type="number" min={0} value={extraCost} onChange={(e) => setExtraCost(Number(e.target.value))}
+            <input type="number" min={0} value={extraCost} onChange={(e) => setExtraCost(e.target.value)}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none" />
           </div>
           <div>
             <label className="text-xs uppercase tracking-widest text-slate-500 block mb-1">Extra monthly revenue</label>
-            <input type="number" min={0} value={extraRevenue} onChange={(e) => setExtraRevenue(Number(e.target.value))}
+            <input type="number" min={0} value={extraRevenue} onChange={(e) => setExtraRevenue(e.target.value)}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-cyan-500 focus:outline-none" />
           </div>
         </div>
@@ -192,7 +193,7 @@ export default function ScenarioPage() {
                       <XAxis dataKey="label" stroke="rgba(255,255,255,0.4)" tick={{ fontSize: 12, fill: "rgba(255,255,255,0.6)" }} />
                       <YAxis stroke="rgba(255,255,255,0.4)" tick={{ fontSize: 11, fill: "rgba(255,255,255,0.5)" }}
                         tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`} />
-                      <Tooltip contentStyle={{ background: "rgba(15,23,42,0.95)", border: "1px solid rgba(124,58,237,0.3)", borderRadius: 10, color: "#e2e8f0", fontSize: 12 }}
+                      <Tooltip cursor={false} contentStyle={{ background: "rgba(218, 220, 226, 0.95)", border: "1px solid rgba(124,58,237,0.3)", borderRadius: 10, color: "#000000", fontSize: 12 }}
                         formatter={(value: any) => [`$${Number(value).toLocaleString()}/mo`, "Burn"]} />
                       <Bar dataKey="burn" radius={[6, 6, 0, 0]}>
                         <Cell fill="#7c3aed" />

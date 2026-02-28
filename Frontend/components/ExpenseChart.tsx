@@ -51,21 +51,22 @@ export default function ExpenseChart({ data }: { data: any[] }) {
               tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`}
             />
             <Tooltip
+              cursor={false}
               contentStyle={{
-                background: "rgba(15,23,42,0.95)",
+                background: "rgba(218, 220, 226, 0.95)",
                 border: "1px solid rgba(124,58,237,0.3)",
                 borderRadius: 10,
-                color: "#e2e8f0",
+                color: "#000000",
                 fontSize: 12,
               }}
-              labelStyle={{ color: "#06b6d4" }}
-              itemStyle={{ color: "#06b6d4" }}
+              labelStyle={{ color: "#000000" }}
+              itemStyle={{ color: "#000000" }}
               formatter={(value: number | undefined) => {
                 const v = value ?? 0;
                 return [`$${v.toLocaleString()}`, "Amount"];
               }}
             />
-            <Bar dataKey="amount" radius={[6, 6, 0, 0]}>
+            <Bar dataKey="amount" radius={[6, 6, 0, 0]} activeBar={false}>
               {data.map((_, i) => (
                 <Cell key={i} fill={`url(#bar-${i % COLORS.length})`} />
               ))}
