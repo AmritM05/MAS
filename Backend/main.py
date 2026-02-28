@@ -13,7 +13,7 @@ from pydantic import BaseModel, Field
 from financial_engine import compute_metrics
 from optimizer import optimize
 from utils import parse_and_validate_csv
-from ai_layer import generate_insights, generate_board_report, ask_cfo_question
+from ai_layer import generate_insights, generate_board_report, ask_cfo_question, generate_ai_optimization
 from anomaly_detector import detect_anomalies
 
 # ── App + CORS ────────────────────────────────────────────────────────
@@ -35,7 +35,7 @@ DEFAULT_CASH_BALANCE: float = 400_000.0
 
 # ── Request / response models ────────────────────────────────────────
 class OptimizeRequest(BaseModel):
-    months: float = Field(..., gt=0, description="Extend runway by this many months")
+    months: float = Field(3, gt=0, description="Fallback: extend runway by this many months (used if AI unavailable)")
     cash_balance: Optional[float] = Field(
         None, gt=0, description="Override cash balance"
     )
@@ -100,7 +100,16 @@ def run_optimize(body: OptimizeRequest):
         raise HTTPException(status_code=400, detail="POST /upload first")
 
     bal = body.cash_balance if body.cash_balance is not None else DEFAULT_CASH_BALANCE
-    return optimize(GLOBAL_DF, bal, body.months)
+    metrics_data = compute_metrics(GLOBAL_DF, bal)
+
+    # Try AI-generated plan first, fall back to algorithmic plan
+    try:
+        result = generate_ai_optimization(metrics_data, bal)
+    except Exception:
+        result = optimize(GLOBAL_DF, bal, body.months)
+        result["ai_generated"] = False
+
+    return result
 
 
 @app.get("/insights")

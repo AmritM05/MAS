@@ -17,8 +17,8 @@ export const getMetrics = async (cashBalance?: number) => {
   return res.data;
 };
 
-export const getOptimization = async (months: number, cashBalance?: number) => {
-  const res = await API.post("/optimize", { months, cash_balance: cashBalance });
+export const getOptimization = async (cashBalance?: number) => {
+  const res = await API.post("/optimize", { cash_balance: cashBalance });
   return res.data;
 };
 

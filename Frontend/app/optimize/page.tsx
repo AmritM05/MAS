@@ -17,7 +17,6 @@ import {
 
 export default function OptimizePage() {
   const { metrics, plan, setPlan, cashBalance } = useData();
-  const [months, setMonths] = useState<string>("3");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,11 +32,16 @@ export default function OptimizePage() {
     );
   }
 
+  // Current metrics from uploaded data
+  const metricsBurn = metrics.burn || 0;
+  const metricsRunway = metrics.runway;
+  const metricsCash = cashBalance;
+
   const runOptimization = async () => {
     setLoading(true);
     setError(null);
     try {
-      const result = await getOptimization(Number(months) || 1, cashBalance);
+      const result = await getOptimization(cashBalance);
       setPlan(result);
     } catch (err: any) {
       setError(err?.response?.data?.detail || "Optimization failed. Try uploading data again.");
@@ -53,57 +57,57 @@ export default function OptimizePage() {
   const burnBefore = plan?.monthly_burn_before;
   const burnAfter = plan?.monthly_burn_after;
   const note = plan?.note;
-
-  // Chart data for before/after comparison
-  const comparisonData = plan
-    ? [
-        { label: "Monthly Burn", before: burnBefore, after: burnAfter },
-      ]
-    : [];
+  const aiGenerated: boolean = plan?.ai_generated || false;
+  const strategySummary: string | null = plan?.strategy_summary || null;
+  const riskAssessment: string | null = plan?.risk_assessment || null;
+  const implementationPhases: string[] = plan?.implementation_phases || [];
 
   // Savings per action chart
-  const savingsData = actions.map((a, i) => ({
+  const savingsData = actions.map((a: any, i: number) => ({
     name: a.action?.length > 25 ? a.action.slice(0, 25) + "…" : a.action,
     savings: a.monthly_savings_est || 0,
     index: i,
   }));
 
   const totalSavings = actions.reduce((s: number, a: any) => s + (a.monthly_savings_est || 0), 0);
-  const runwayGained = plan ? (newRunway ?? 0) - (currentRunway ?? 0) : 0;
 
   return (
     <div className="space-y-6">
-      {/* Input panel */}
+      {/* Current snapshot + Generate button */}
       <div className="futuristic-card p-6">
         <h2 className="text-lg font-semibold text-slate-200 mb-4 flex items-center gap-2">
-          <span className="text-xl">🚀</span> Runway Optimizer
+          <span className="text-xl">🚀</span> AI Spending Optimizer
         </h2>
         <p className="text-sm text-slate-400 mb-4">
-          Enter the number of months you want to extend your runway. Our AI optimizer will find the best cost-cutting actions
-          while minimizing business impact.
+          Our AI CFO will analyse your entire expense breakdown and craft a tailored optimization
+          plan — with realistic strategies, risk assessment, and a phased implementation roadmap.
         </p>
-        <div className="flex gap-3 items-end">
-          <div className="flex-1">
-            <label className="text-xs uppercase tracking-widest text-slate-500 block mb-1">
-              Target months to add
-            </label>
-            <input
-              type="number"
-              min={1}
-              max={36}
-              value={months}
-              onChange={(e) => setMonths(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-white text-sm focus:border-cyan-500 focus:outline-none transition-colors"
-            />
+
+        {/* Current financial snapshot */}
+        <div className="grid grid-cols-3 gap-4 mb-5">
+          <div className="bg-white/[0.03] rounded-xl p-4 text-center border border-white/5">
+            <p className="text-xs uppercase tracking-widest text-slate-500 mb-1">Cash on Hand</p>
+            <p className="stat-value text-xl text-cyan-400">${metricsCash.toLocaleString()}</p>
           </div>
-          <button
-            onClick={runOptimization}
-            disabled={loading || (Number(months) || 0) <= 0}
-            className="neon-btn text-white px-6 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap"
-          >
-            {loading ? "⚙️ Optimizing..." : "Generate Plan"}
-          </button>
+          <div className="bg-white/[0.03] rounded-xl p-4 text-center border border-white/5">
+            <p className="text-xs uppercase tracking-widest text-slate-500 mb-1">Monthly Burn</p>
+            <p className="stat-value text-xl text-rose-400">${metricsBurn.toLocaleString()}</p>
+          </div>
+          <div className="bg-white/[0.03] rounded-xl p-4 text-center border border-white/5">
+            <p className="text-xs uppercase tracking-widest text-slate-500 mb-1">Current Runway</p>
+            <p className="stat-value text-xl text-slate-300">
+              {metricsRunway != null ? `${metricsRunway.toFixed(1)} mo` : "∞"}
+            </p>
+          </div>
         </div>
+
+        <button
+          onClick={runOptimization}
+          disabled={loading}
+          className="neon-btn text-white px-8 py-3 rounded-lg text-sm font-semibold w-full"
+        >
+          {loading ? "🤖 AI is analyzing your finances..." : "Generate Optimization Plan"}
+        </button>
         {error && (
           <div className="mt-3 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
             {error}
@@ -115,7 +119,17 @@ export default function OptimizePage() {
       {plan && (
         <>
           {/* Summary stats */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="futuristic-card p-5 text-center">
+              <p className="text-xs uppercase tracking-widest text-slate-500 mb-1">Burn Before</p>
+              <p className="stat-value text-2xl text-rose-400">${burnBefore?.toLocaleString()}</p>
+              <p className="text-xs text-slate-500 mt-1">${((burnBefore || 0) * 12).toLocaleString()}/yr</p>
+            </div>
+            <div className="futuristic-card p-5 text-center">
+              <p className="text-xs uppercase tracking-widest text-slate-500 mb-1">Burn After</p>
+              <p className="stat-value text-2xl text-emerald-400">${burnAfter?.toLocaleString()}</p>
+              <p className="text-xs text-slate-500 mt-1">${((burnAfter || 0) * 12).toLocaleString()}/yr</p>
+            </div>
             <div className="futuristic-card p-5 text-center">
               <p className="text-xs uppercase tracking-widest text-slate-500 mb-1">Current Runway</p>
               <p className="stat-value text-2xl text-slate-300">
@@ -129,21 +143,9 @@ export default function OptimizePage() {
                 {newRunway != null ? `${newRunway.toFixed(1)}` : "∞"}
                 <span className="text-xs font-normal text-slate-500 ml-1">mo</span>
               </p>
-            </div>
-            <div className="futuristic-card p-5 text-center">
-              <p className="text-xs uppercase tracking-widest text-slate-500 mb-1">Runway Gained</p>
-              <p className="stat-value text-2xl text-emerald-400">
-                +{runwayGained.toFixed(1)}
-                <span className="text-xs font-normal text-slate-500 ml-1">mo</span>
-              </p>
-            </div>
-            <div className="futuristic-card p-5 text-center">
-              <p className="text-xs uppercase tracking-widest text-slate-500 mb-1">Burn Before</p>
-              <p className="stat-value text-2xl text-rose-400">${burnBefore?.toLocaleString()}</p>
-            </div>
-            <div className="futuristic-card p-5 text-center">
-              <p className="text-xs uppercase tracking-widest text-slate-500 mb-1">Burn After</p>
-              <p className="stat-value text-2xl text-emerald-400">${burnAfter?.toLocaleString()}</p>
+              {currentRunway != null && newRunway != null && (
+                <p className="text-xs text-emerald-400 mt-1">+{(newRunway - currentRunway).toFixed(1)} mo gained</p>
+              )}
             </div>
           </div>
 
@@ -180,7 +182,20 @@ export default function OptimizePage() {
 
           {/* Action items - detailed */}
           <div className="futuristic-card p-6">
-            <h2 className="text-lg font-semibold text-slate-200 mb-4">Recommended Actions</h2>
+            <h2 className="text-lg font-semibold text-slate-200 mb-4 flex items-center gap-2">
+              {aiGenerated && <span className="text-xl">🤖</span>}
+              Recommended Actions
+              {aiGenerated && (
+                <span className="text-xs bg-violet-500/20 text-violet-400 px-2 py-0.5 rounded-full font-normal">
+                  AI-Generated
+                </span>
+              )}
+            </h2>
+            {strategySummary && (
+              <p className="text-sm text-slate-400 mb-4 bg-white/[0.02] rounded-lg p-3 border border-white/5">
+                {strategySummary}
+              </p>
+            )}
             <div className="space-y-3">
               {actions.map((a, i) => (
                 <div
@@ -195,9 +210,14 @@ export default function OptimizePage() {
                       <div>
                         <p className="text-sm text-slate-200 font-medium">{a.action}</p>
                         <p className="text-xs text-slate-500 mt-1">
-                          Category: {a.category || "General"} • 
-                          {a.cut_pct ? ` ${(a.cut_pct * 100).toFixed(0)}% reduction` : " Strategic action"}
+                          Category: {a.category || "General"}
+                          {a.cut_pct ? ` • ${(a.cut_pct * 100).toFixed(0)}% reduction` : ""}
                         </p>
+                        {a.reasoning && (
+                          <p className="text-xs text-cyan-400/70 mt-2 leading-relaxed">
+                            💡 {a.reasoning}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="text-right flex-shrink-0">
@@ -258,6 +278,43 @@ export default function OptimizePage() {
           {note && (
             <div className="futuristic-card p-4 text-sm text-slate-500 italic border-l-2 border-cyan-500/30">
               {note}
+            </div>
+          )}
+
+          {/* AI Risk Assessment & Implementation Phases */}
+          {(riskAssessment || implementationPhases.length > 0) && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {riskAssessment && (
+                <div className="futuristic-card p-6">
+                  <h2 className="text-sm uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
+                    <span>⚠️</span> Risk Assessment
+                  </h2>
+                  <p className="text-sm text-slate-300 leading-relaxed">{riskAssessment}</p>
+                </div>
+              )}
+              {implementationPhases.length > 0 && (
+                <div className="futuristic-card p-6">
+                  <h2 className="text-sm uppercase tracking-widest text-slate-500 mb-4 flex items-center gap-2">
+                    <span>📋</span> Implementation Roadmap
+                  </h2>
+                  <div className="space-y-3">
+                    {implementationPhases.map((phase, i) => (
+                      <div key={i} className="flex gap-3 items-start">
+                        <span className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 text-xs flex items-center justify-center font-bold flex-shrink-0 mt-0.5">
+                          {i + 1}
+                        </span>
+                        <p className="text-sm text-slate-300">{phase}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {!aiGenerated && (
+            <div className="futuristic-card p-4 text-sm text-slate-500 italic border-l-2 border-yellow-500/30">
+              ⚡ AI optimization unavailable — showing algorithmic plan as fallback.
             </div>
           )}
         </>

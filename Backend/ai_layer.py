@@ -266,3 +266,120 @@ Guidelines:
 Answer:"""
 
     return _call_granite(prompt, max_tokens=800)
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#  generate_ai_optimization  (Full AI-driven optimizer)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+def generate_ai_optimization(
+    metrics: dict[str, Any],
+    cash_balance: float,
+) -> dict[str, Any]:
+    """
+    Have IBM Granite generate a full, creative optimization plan based
+    on the current financial data. No target months required — the AI
+    analyses the full picture and recommends the best optimizations.
+
+    Returns a structured dict with plan actions, reasoning, and projected
+    numbers — or raises RuntimeError if the AI call fails.
+    """
+    current_burn = metrics.get("burn", 0)
+    current_runway = metrics.get("runway")
+    total_expenses = sum(e.get("amount", 0) for e in metrics.get("expenses", []))
+
+    prompt = f"""You are an expert Chief Financial Officer optimizing a startup's finances.
+
+=== CURRENT FINANCIAL DATA ===
+Cash on hand: ${cash_balance:,.0f}
+Monthly burn rate: ${current_burn:,.0f}
+Current runway: {f"{current_runway:.1f} months" if current_runway else "cash-flow positive (no net burn)"}
+Total expenses: ${total_expenses:,.0f}
+
+=== EXPENSE BREAKDOWN ===
+{json.dumps(metrics.get("expenses", []), indent=2)}
+
+=== YOUR TASK ===
+Analyse ALL expenses and create the best optimization plan to reduce costs and
+extend runway as much as possible. Focus on the highest-impact, lowest-risk
+changes first.
+
+Do NOT just say "cut X by 20%" — instead suggest realistic strategies like:
+- Renegotiate vendor contracts for better rates
+- Switch to cheaper alternatives (name specific types)
+- Consolidate redundant tools/services
+- Defer non-critical hires or use contractors
+- Shift to usage-based pricing models
+- Reduce office space / go hybrid
+- Optimize marketing spend by reallocating to higher-ROI channels
+- Cross-train staff instead of new hires
+- Automate manual processes to reduce labor costs
+
+You MUST respond in EXACTLY this JSON format and nothing else:
+{{
+  "plan": [
+    {{
+      "action": "Brief description of the action",
+      "category": "Which expense category this targets",
+      "monthly_savings_est": 1234,
+      "reasoning": "1-2 sentences explaining why this works and the tradeoff"
+    }}
+  ],
+  "strategy_summary": "2-3 sentence overall strategy description",
+  "risk_assessment": "2-3 sentences about key risks and how to mitigate them",
+  "implementation_phases": [
+    "Phase 1 (Week 1): ...",
+    "Phase 2 (Month 1): ...",
+    "Phase 3 (Quarter 1): ..."
+  ]
+}}
+
+Rules:
+- Propose 4-7 specific actions.
+- monthly_savings_est for each action must be realistic and proportional to the actual category spend.
+- Total savings should aim for 15-30% of current burn — aggressive but achievable.
+- Reference the ACTUAL expense categories and amounts from the data above.
+- Be creative but realistic. A real CFO would approve these.
+- Output ONLY valid JSON — no markdown, no explanation before/after.
+
+JSON:"""
+
+    raw = _call_granite(prompt, max_tokens=1500)
+
+    # Parse the AI response as JSON
+    # Strip any markdown code fences if present
+    cleaned = raw.strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.split("\n", 1)[1] if "\n" in cleaned else cleaned[3:]
+    if cleaned.endswith("```"):
+        cleaned = cleaned[:-3]
+    cleaned = cleaned.strip()
+
+    try:
+        ai_plan = json.loads(cleaned)
+    except json.JSONDecodeError:
+        # Try to find JSON object in the response
+        start = cleaned.find("{")
+        end = cleaned.rfind("}") + 1
+        if start >= 0 and end > start:
+            ai_plan = json.loads(cleaned[start:end])
+        else:
+            raise RuntimeError(f"AI returned non-JSON response: {raw[:200]}")
+
+    # Build the structured response matching the frontend's expected format
+    actions = ai_plan.get("plan", [])
+    total_savings = sum(a.get("monthly_savings_est", 0) for a in actions)
+    new_burn = current_burn - total_savings
+    new_runway = round(cash_balance / new_burn, 2) if new_burn > 0 else None
+
+    return {
+        "current_runway": current_runway,
+        "new_runway": new_runway,
+        "monthly_burn_before": round(current_burn, 2),
+        "monthly_burn_after": round(max(new_burn, 0), 2),
+        "plan": actions,
+        "strategy_summary": ai_plan.get("strategy_summary", ""),
+        "risk_assessment": ai_plan.get("risk_assessment", ""),
+        "implementation_phases": ai_plan.get("implementation_phases", []),
+        "ai_generated": True,
+    }
